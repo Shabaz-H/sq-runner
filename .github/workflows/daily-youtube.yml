@@ -1,0 +1,54 @@
+name: Daily YouTube Long-form
+on:
+  schedule:
+    - cron: '0 12 * * *'   # 12pm UTC = 1pm UK
+  workflow_dispatch:
+
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+  PUPPETEER_SKIP_DOWNLOAD: true
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+        with:
+          repository: Shabaz-H/simplyquizzes
+          token: ${{ secrets.GH_PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Cache node_modules
+        id: cache-nm
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node24-
+
+      - name: Install dependencies
+        if: steps.cache-nm.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Install fonts
+        run: |
+          echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections
+          sudo apt-get install -y --fix-missing ttf-mscorefonts-installer fonts-noto-color-emoji fontconfig
+          fc-cache -f -v
+
+      - name: Run pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+          ZERNIO_YOUTUBE_ACCOUNT_ID: ${{ secrets.ZERNIO_YOUTUBE_ACCOUNT_ID }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+          DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
+          DROPBOX_FOLDER: ${{ secrets.DROPBOX_FOLDER }}
+        run: npx tsx scripts/daily-youtube.ts
