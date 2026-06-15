@@ -1,13 +1,15 @@
-name: Daily Quiz Post
+name: Daily Trending Quiz
 on:
   schedule:
-    - cron: '0 19 * * *'   # 7pm UTC = 8pm UK
+    - cron: '0 13 * * *'   # 1pm UTC = 2pm UK
   workflow_dispatch:
 
 env:
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
   PUPPETEER_SKIP_DOWNLOAD: true
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  THEME_BG: '#1d4ed8'
+  THEME_ACCENT: '#FFD700'
 
 jobs:
   post:
@@ -54,4 +56,4 @@ jobs:
           ZERNIO_INSTAGRAM_ACCOUNT_ID: ${{ secrets.ZERNIO_INSTAGRAM_ACCOUNT_ID }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npx tsx scripts/daily-quiz.ts
+        run: npx tsx scripts/daily-trending.ts
