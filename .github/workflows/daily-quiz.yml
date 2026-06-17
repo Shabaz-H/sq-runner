@@ -1,7 +1,8 @@
 name: Daily Quiz Post
 on:
   schedule:
-    - cron: '0 19 * * *'   # 7pm UTC = 8pm UK
+    - cron: '0 12 * * *'   # 12pm UTC = 1pm UK — afternoon peak
+    - cron: '0 18 * * *'   # 6pm UTC = 7pm UK — evening peak
   workflow_dispatch:
 
 env:
