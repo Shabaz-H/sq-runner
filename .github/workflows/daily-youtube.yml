@@ -1,7 +1,7 @@
 name: Daily YouTube Long-form
 on:
-  schedule:
-    - cron: '0 12 * * *'   # 12pm UTC = 1pm UK
+  # schedule:
+  #   - cron: '0 12 * * *'   # 12pm UTC = 1pm UK  [PAUSED - videos need rework]
   workflow_dispatch:
 
 env:
