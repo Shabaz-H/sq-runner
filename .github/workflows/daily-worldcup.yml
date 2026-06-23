@@ -40,10 +40,10 @@ jobs:
         run: npm ci
         timeout-minutes: 40
 
-      - name: Install fonts
+      - name: Install fonts and ffmpeg
         run: |
           echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections
-          sudo apt-get install -y --fix-missing ttf-mscorefonts-installer fonts-noto-color-emoji fontconfig
+          sudo apt-get install -y --fix-missing ttf-mscorefonts-installer fonts-noto-color-emoji fontconfig ffmpeg
           fc-cache -f -v
 
       - name: Run pipeline
